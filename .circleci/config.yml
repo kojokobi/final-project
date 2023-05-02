@@ -2,7 +2,6 @@ version: 2.1
 
 orbs:
   docker: circleci/docker@2.2.0
-  # ses
 commands:
   dependencies:
     steps:
@@ -15,25 +14,33 @@ commands:
           name: Installing ansible
           command: |
             sudo add-apt-repository --yes --update ppa:ansible/ansible
-            sudo apt install ansible  
+            sudo apt install ansible
 
 # Define the jobs we want to run for this project
 jobs:
-
   lint-dockerfile:
-      executor: docker/machine
-      steps:
-        - checkout
-        # - docker/check
-        - docker/dockerlint:
-            dockerfile: ./Dockerfile
-        - docker/build:
-            image: finalproject-img
-            treat-warnings-as-errors: true
-            # dockerfile: ./dockerfile
-            
+    executor: docker/machine
+    steps:
+      - checkout
+      - docker/dockerlint:
+          dockerfile: ./Dockerfile
+  
+  lint-dockerfile-hadolint:
+    executor: docker/machine
+    steps:
+      - checkout
+      - docker/hadolint:
+          dockerfiles: ./Dockerfile
+  
 
-      
+  build-dockerfile:
+    executor: docker/machine
+    steps:
+      - checkout
+      - docker/build:
+          image: finalproject-img
+          treat-warnings-as-errors: true
+
   create-ec2-instance:
     docker:
       - image: cimg/aws:2023.01
@@ -60,16 +67,20 @@ jobs:
           command: |
             aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
-        
+
       - persist_to_workspace:
-            root: ~/
-            paths:
-              - project/.circleci/ansible/inventory.txt
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
 
 # Orchestrate our job run sequence
 workflows:
   default:
     jobs:
-      - lint-dockerfile
+    
+      - lint-dockerfile-hadolint
+      # - lint-dockerfile
+      # - build-dockerfile
+
       # - create-ec2-instance
       # - get-instance-id
