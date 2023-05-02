@@ -36,7 +36,7 @@ jobs:
           dockerfile: ./Dockerfile
   
   lint-dockerfile-hadolint:
-    executor: docker/machine
+    executor: docker/hadolint
     steps:
       - checkout
       - docker/hadolint:
