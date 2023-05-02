@@ -44,7 +44,7 @@ jobs:
       
 
   build-and-push:
-    executor: docker/docker
+    executor: docker/machine
     steps:
       - checkout
       - docker/build:
