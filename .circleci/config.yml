@@ -34,21 +34,12 @@ jobs:
           image: finalproject-img
           treat-warnings-as-errors: true
 
-  # build-dockerfile:
-  #   executor: docker/machine
-  #   steps:
-  #     - checkout
-  #     - docker/build:
-  #         image: finalproject-img
-  #         treat-warnings-as-errors: true
-      
-
-  build-and-push:
+  build-push-image:
     executor: docker/machine
     steps:
       - checkout
       - docker/build:
-          image: finalproject-img
+          image: kojokobi/app
           treat-warnings-as-errors: true
       - docker/push:
           image: kojokobi/app
@@ -63,7 +54,7 @@ jobs:
           name: create microk8s ec2 instance
           command: |
             aws cloudformation deploy \
-              --template-file .circleci/files/minikube-ec2.yml \
+              --template-file .circleci/files/finalProject-ec2.yml \
               --stack-name "finalProject-${CIRCLE_WORKFLOW_ID:0:7}" \
               --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" \
               --region us-east-1 \
@@ -90,9 +81,8 @@ workflows:
   default:
     jobs:
     
-      # - lint-dockerfile-hadolint
-      # - build-dockerfile
-      - build-and-push
-
+      - build-push-image
+      - lint-dockerfile-hadolint
+      - build-dockerfile
       # - create-ec2-instance
       # - get-instance-id
