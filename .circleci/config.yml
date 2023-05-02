@@ -16,24 +16,8 @@ commands:
             sudo add-apt-repository --yes --update ppa:ansible/ansible
             sudo apt install ansible
 
-# Define the jobs we want to run for this project
+
 jobs:
-  
-  lint-with-hadolint:
-    executor: docker/machine
-    steps:
-      - checkout
-      - docker/hadolint:
-          dockerfiles: ./Dockerfile
-          hadolint-tag: 2.2.0-debian
-
-
-  lint-dockerfile:
-    executor: docker/machine
-    steps:
-      - checkout
-      - docker/dockerlint:
-          dockerfile: ./Dockerfile
   
   lint-dockerfile-hadolint:
     executor: docker/hadolint
@@ -42,7 +26,6 @@ jobs:
       - docker/hadolint:
           dockerfiles: ./Dockerfile
   
-
   build-dockerfile:
     executor: docker/machine
     steps:
@@ -50,6 +33,25 @@ jobs:
       - docker/build:
           image: finalproject-img
           treat-warnings-as-errors: true
+
+  # build-dockerfile:
+  #   executor: docker/machine
+  #   steps:
+  #     - checkout
+  #     - docker/build:
+  #         image: finalproject-img
+  #         treat-warnings-as-errors: true
+      
+
+  build-and-push:
+    executor: docker/docker
+    steps:
+      - checkout
+      - docker/build:
+          image: finalproject-img
+          treat-warnings-as-errors: true
+      - docker/push:
+          image: kojokobi/app
 
   create-ec2-instance:
     docker:
@@ -89,8 +91,8 @@ workflows:
     jobs:
     
       - lint-dockerfile-hadolint
-      # - lint-dockerfile
-      # - build-dockerfile
+      - build-dockerfile
+      - build-and-push
 
       # - create-ec2-instance
       # - get-instance-id
