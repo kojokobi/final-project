@@ -20,14 +20,16 @@ commands:
 # Define the jobs we want to run for this project
 jobs:
 
-  lint-and-build-docker-image:
+  lint-dockerfile:
       executor: docker/machine
       steps:
         - checkout
-        - docker/check
-        - docker/hadolint
-        - docker/build:
-            image: $CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME
+        # - docker/check
+        - docker/dockerlint:
+            dockerfile: ./Dockerfile
+        # - docker/build:
+            
+
       
   create-ec2-instance:
     docker:
@@ -65,6 +67,6 @@ jobs:
 workflows:
   default:
     jobs:
-      - lint-and-build-docker-image
+      - lint-dockerfile
       # - create-ec2-instance
       # - get-instance-id
