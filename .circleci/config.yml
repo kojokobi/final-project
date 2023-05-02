@@ -18,6 +18,16 @@ commands:
 
 # Define the jobs we want to run for this project
 jobs:
+  
+  lint-with-hadolint:
+    executor: docker/machine
+    steps:
+      - checkout
+      - docker/hadolint:
+          dockerfiles: ./Dockerfile
+          hadolint-tag: 2.2.0-debian
+
+
   lint-dockerfile:
     executor: docker/machine
     steps:
