@@ -1,0 +1,98 @@
+Description: >
+  Udacity Cloud devops engineer capstone project.
+Parameters:
+  DefaultVPCID: 
+    Description: An existing VPC Id to use
+    Type: String 
+    Default: vpc-0989147bf72e2e182
+  
+  ImageToUse:
+    Description: Linux Image to use
+    Type: String
+    Default: ami-007855ac798b5175e
+
+  DefaultSubnetId:
+    Description: DefaultSubnetId
+    Type: String
+    Default: subnet-072cd7074c33ebb4e
+  
+  InstanceType:
+    Description: The type of server instance to use
+    Type: String
+    Default: t2.large
+  
+ 
+
+
+Resources:
+  WebAccessSecGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http requests to server 
+      VpcId: !Ref DefaultVPCID
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 443
+        ToPort: 443
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 6443
+        ToPort: 6443
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 2379
+        ToPort: 2380
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 10250
+        ToPort: 10250
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 10251
+        ToPort: 10251
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 10252
+        ToPort: 10252
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 8472
+        ToPort: 8472
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 30000
+        ToPort: 32767
+        CidrIp: 0.0.0.0/0
+      # SecurityGroupEgress:
+      # - IpProtocol: tcp
+      #   FromPort: -1
+      #   ToPort: -1
+      #   CidrIp: 0.0.0.0/0
+
+  ServerInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Sub ${ImageToUse}
+      KeyName: udacity
+      InstanceType: !Ref InstanceType
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true 
+          DeviceIndex: "0"
+          GroupSet:
+            - !Ref WebAccessSecGroup
+          SubnetId: !Ref DefaultSubnetId
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: 30
+            VolumeType: gp2
+  
+ 

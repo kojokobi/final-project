@@ -1,0 +1,74 @@
+- name: "apt package update"
+  become: true
+  apt:
+    update_cache: yes
+
+- name: "apt package upgrade"
+  become: true
+  apt:
+    upgrade: yes
+
+- name: "Remove redundant dependencies"
+  become: true
+  apt:
+    autoremove: yes
+
+- name: "install kubectl"
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      snap install kubectl --classic;
+      kubectl version --client
+
+
+- name: "update apt packages"
+  become: true
+  apt:
+    update_cache: yes
+    state: present
+
+- name: "package with response"
+  become: true
+  ansible.builtin.expect:
+    command:  sudo apt install apt-transport-https ca-certificates curl software-properties-common
+    # responses: "Do you want to continue\"\[Y\/\]\"': 'y'"
+    # responses: Do you want to continue\"\[Y\/N\]\"': "yes"
+    responses: 
+      Do you want to continue? [Y/n] : "yes"
+    
+    
+# After this operation, 166 kB of additional disk space will be used.
+# Do you want to continue? [Y/n]
+
+- name: "prerequisite packages"
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      sudo apt install apt-transport-https ca-certificates curl software-properties-common
+
+- name: "Add the GPG key"
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      sudo apt install apt-transport-https ca-certificates curl software-properties-common;
+      
+
+- name: "Add the Docker repository to APT sources"
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+
+
+- name: "Add the Docker repository to APT sources"
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      apt-cache policy docker-ce
+
+
+- name: "Remove redundant dependencies"
+  become: true
+  apt:
+    name: docker-ce
+

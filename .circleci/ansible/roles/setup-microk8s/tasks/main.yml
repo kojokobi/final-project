@@ -1,0 +1,31 @@
+- name: "apt package update"
+  become: true
+  apt:
+    update_cache: yes
+    
+- name: "install microk8s"
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      sudo snap install microk8s --classic --channel=1.27
+
+
+- name: "join the group"
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      sudo usermod -a -G microk8s ubuntu;
+      sudo chown -f -R ubuntu ~/.kube
+      
+
+# - name: "reload new user groups"
+#   become: true
+#   ansible.builtin.shell:
+#     cmd: |
+#       newgrp microk8s
+
+      
+# sudo usermod -a -G microk8s ubuntu
+# sudo chown -f -R ubuntu ~/.kube
+# newgrp microk8s
+

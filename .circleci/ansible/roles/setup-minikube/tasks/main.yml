@@ -1,0 +1,24 @@
+- name: "apt package update"
+  become: true
+  apt:
+    update_cache: yes
+
+- name: "install minikube stable release"
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
+      sudo dpkg -i minikube_latest_amd64.deb
+
+
+- name: "Fix for minikube start error"
+  become: true
+  ansible.builtin.shell:
+    cmd: |
+      docker system prune; //add sudo 
+      minikube delete;
+      minikube start --driver=docker
+
+      
+
+
