@@ -27,7 +27,10 @@ jobs:
         # - docker/check
         - docker/dockerlint:
             dockerfile: ./Dockerfile
-        # - docker/build:
+        - docker/build:
+            image: finalproject-img
+            treat-warnings-as-errors: true
+            dockerfile: ./dockerfile
             
 
       
