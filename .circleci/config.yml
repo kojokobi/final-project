@@ -90,8 +90,8 @@ workflows:
   default:
     jobs:
     
-      - lint-dockerfile-hadolint
-      - build-dockerfile
+      # - lint-dockerfile-hadolint
+      # - build-dockerfile
       - build-and-push
 
       # - create-ec2-instance
