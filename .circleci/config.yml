@@ -30,7 +30,7 @@ jobs:
         - docker/build:
             image: finalproject-img
             treat-warnings-as-errors: true
-            dockerfile: ./dockerfile
+            # dockerfile: ./dockerfile
             
 
       
