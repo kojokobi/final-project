@@ -24,11 +24,9 @@ jobs:
       executor: docker/machine
       steps:
         - checkout
-        - docker/check
-        - docker/hadolint:
-            dockerfiles: ./Dockerfile
-            # executor-class: medium
-            # hadolint-tag: 2.2.0-debian
+        # - docker/check
+        - docker/dockerlint:
+            dockerfile: ./Dockerfile
         # - docker/build:
             
 
