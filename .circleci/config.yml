@@ -66,5 +66,5 @@ workflows:
   default:
     jobs:
       - lint-and-build-docker-image
-      - create-ec2-instance
-      - get-instance-id
+      # - create-ec2-instance
+      # - get-instance-id
