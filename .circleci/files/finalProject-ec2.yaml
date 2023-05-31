@@ -4,17 +4,20 @@ Parameters:
   DefaultVPCID: 
     Description: An existing VPC Id to use
     Type: String 
-    Default: vpc-0989147bf72e2e182
+    # Default: vpc-0989147bf72e2e182
+    Default: vpc-071a2c97458b76171
   
   ImageToUse:
     Description: Linux Image to use
     Type: String
-    Default: ami-007855ac798b5175e
+    # Default: ami-007855ac798b5175e
+    Default: ami-0557a15b87f6559cf
 
   DefaultSubnetId:
     Description: DefaultSubnetId
     Type: String
-    Default: subnet-072cd7074c33ebb4e
+    # Default: subnet-072cd7074c33ebb4e
+    Default: subnet-0e9f077a19a3e3722
   
   InstanceType:
     Description: The type of server instance to use
@@ -81,7 +84,8 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: !Sub ${ImageToUse}
-      KeyName: udacity
+      # KeyName: udacity
+      KeyName: personal_udacity_keypair
       InstanceType: !Ref InstanceType
       NetworkInterfaces:
         - AssociatePublicIpAddress: true 
