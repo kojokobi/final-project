@@ -123,3 +123,5 @@ workflows:
        - configure_infrastructure:
           requires:
             - create-ec2-instance
+
+# trigger
