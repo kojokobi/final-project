@@ -15,6 +15,20 @@ commands:
           command: |
             sudo add-apt-repository --yes --update ppa:ansible/ansible
             sudo apt install ansible
+
+  destroy_environment:
+    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+    parameters:
+      workflow_id:
+        type: "string"
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+            aws cloudformation delete-stack --stack-name finalProject-<< parameters.workflow_id >>
+            
 executors:
   docker-publisher: 
     environment:
@@ -24,6 +38,7 @@ executors:
         auth:
             username: $DOCKERHUB_USERNAME
             password: $DOCKERHUB_PASSWORD
+
 
 jobs:
     lint-dockerfile:
@@ -103,6 +118,8 @@ jobs:
               cat ~/project/.circleci/ansible/inventory.txt
               export ANSIBLE_HOST_KEY_CHECKING=False
               ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/main.yml
+              
+        - destroy_environment
         
         
 

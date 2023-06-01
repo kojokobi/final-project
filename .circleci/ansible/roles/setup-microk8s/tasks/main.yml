@@ -10,12 +10,18 @@
       sudo snap install microk8s --classic --channel=1.27
 
 
-- name: "join the group"
+- name: "join the microk8s group"
   become: true
   ansible.builtin.shell:
     cmd: |
       sudo usermod -a -G microk8s ubuntu;
-      sudo chown -f -R ubuntu ~/.kube
+      
+
+# - name: "join the group"
+#   become: true
+#   ansible.builtin.command:
+#     cmd: |
+#       sudo chown -f -R ubuntu ~/.kube
       
 
 # - name: "reload new user groups"
