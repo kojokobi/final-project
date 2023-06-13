@@ -128,17 +128,38 @@ jobs:
 workflows:
   build-master:
     jobs:
-       - lint-dockerfile
+       - lint-dockerfile:
+            filters:
+              branches:
+                only:
+                  - dev
+               
        - build-dockerfile:
           requires:
             - lint-dockerfile
+          filters:
+            branches:
+              only:
+                - dev
        - publishLatestToHub:
           requires:
             - build-dockerfile
+          filters:
+            branches:
+              only:
+                - dev
        - create-ec2-instance:
           requires:
             - publishLatestToHub
+          filters:
+            branches:
+              only:
+                - main
        - configure_infrastructure:
           requires:
             - create-ec2-instance
+          filters:
+            branches:
+              only:
+                - main
 
