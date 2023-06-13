@@ -65,7 +65,8 @@ jobs:
             name: Publish Docker Image to Docker Hub
             command: |
               echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-              docker build -t $IMAGE_NAME -t $IMAGE_NAME:v1 .
+              # docker build -t $IMAGE_NAME -t $IMAGE_NAME:v1 .
+              docker build -t $IMAGE_NAME:v1 .
               docker push --all-tags $IMAGE_NAME
 
     create-ec2-instance:
@@ -137,7 +138,7 @@ workflows:
        - create-ec2-instance:
           requires:
             - publishLatestToHub
-       - configure_infrastructure:
-          requires:
-            - create-ec2-instance
+      #  - configure_infrastructure:
+      #     requires:
+      #       - create-ec2-instance
 
