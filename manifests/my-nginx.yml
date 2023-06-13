@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+spec:
+  selector:
+    matchLabels:
+      run: my-nginx
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: my-nginx
+    spec:
+      containers:
+      - name: my-nginx
+        image: kojokobi/app:v3
+        ports:
+        - containerPort: 80
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  
