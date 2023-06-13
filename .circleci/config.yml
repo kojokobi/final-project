@@ -138,7 +138,7 @@ workflows:
        - create-ec2-instance:
           requires:
             - publishLatestToHub
-      #  - configure_infrastructure:
-      #     requires:
-      #       - create-ec2-instance
+       - configure_infrastructure:
+          requires:
+            - create-ec2-instance
 
