@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: my-nginx
-        image: kojokobi/app:v1
+        image: kojokobi/app:v2
         ports:
         - containerPort: 80
   strategy:
