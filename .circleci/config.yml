@@ -149,8 +149,6 @@ workflows:
               only:
                 - dev
        - create-ec2-instance:
-          requires:
-            - publishLatestToHub
           filters:
             branches:
               only:
