@@ -91,6 +91,27 @@ jobs:
               aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> .circleci/ansible/inventory.txt
               cat .circleci/ansible/inventory.txt
 
+    create-green-deployment-instance:
+      docker:
+        - image: cimg/aws:2023.01
+      steps:
+        - checkout
+        - run:
+            name: create green deployment ec2 instance
+            command: |
+              aws cloudformation deploy \
+                --template-file .circleci/files/finalProject-ec2.yml \
+                --stack-name "finalProject-greenStack-${CIRCLE_WORKFLOW_ID:0:7}" \
+                --capabilities "CAPABILITY_IAM" "CAPABILITY_NAMED_IAM" \
+                --region us-east-1 \
+                --tags project=finalProject-GreenDeployment
+
+        - run:
+            name: Add second back-end ip to ansible inventory
+            command: |
+              aws ec2 describe-instances --query 'Reservations[1].Instances[*].PublicIpAddress' --output text >> .circleci/ansible/inventory.txt
+              cat .circleci/ansible/inventory.txt
+
         - persist_to_workspace:
             root: ~/
             paths:
@@ -153,6 +174,13 @@ workflows:
             branches:
               only:
                 - main
+       
+       - create-green-deployment-instance:
+          filters:
+            branches:
+              only:
+                - update
+
        - configure_infrastructure:
           requires:
             - create-ec2-instance
@@ -160,5 +188,6 @@ workflows:
             branches:
               only:
                 - main
+       
 
 # trigger
