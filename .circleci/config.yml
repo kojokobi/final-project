@@ -179,7 +179,7 @@ workflows:
           filters:
             branches:
               only:
-                - update
+                - main
 
        - configure_infrastructure:
           requires:
@@ -188,5 +188,6 @@ workflows:
             branches:
               only:
                 - main
+                - update
        
 
