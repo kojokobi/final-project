@@ -193,21 +193,16 @@ workflows:
             branches:
               only:
                 - dev
+
        - create-ec2-instance:
           filters:
             branches:
               only:
                 - main
 
-       - configure_infrastructure:
+       - create-green-deployment-instance:
           requires:
             - create-ec2-instance
-          filters:
-            branches:
-              only:
-                - main
-       
-       - create-green-deployment-instance:
           filters:
             branches:
               only:
@@ -216,6 +211,7 @@ workflows:
        - configure_infrastructure:
           requires:
             - create-ec2-instance
+            - create-green-deployment-instance
           filters:
             branches:
               only:
