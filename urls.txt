@@ -1,0 +1,11 @@
+Github Repository
+https://github.com/kojokobi/final-project
+
+Github Repository-dev (has the most current updates)
+https://github.com/kojokobi/final-project/tree/dev
+
+Circleci Repository
+https://app.circleci.com/pipelines/github/kojokobi
+
+Deployed App running on kubenetes cluster
+http://ec2-3-89-251-205.compute-1.amazonaws.com:31852
