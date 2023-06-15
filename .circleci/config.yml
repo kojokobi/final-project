@@ -135,7 +135,7 @@ jobs:
               apk add openssh-client
               pip3 install awscli
         - run:
-            name: Configure server
+            name: Configure servers
             command: |
               cat ~/project/.circleci/ansible/inventory.txt
               export ANSIBLE_HOST_KEY_CHECKING=False
@@ -143,7 +143,31 @@ jobs:
               
         - destroy_environment
         
-        
+    configure_green_deployment_infrastructure:
+      docker:
+        - image: python:3.7-alpine3.11
+      steps:
+        - checkout
+        - add_ssh_keys:
+            fingerprints: ["df:83:e0:88:9c:f0:43:f7:cb:da:a9:0c:79:5c:7d:9e"]
+        - attach_workspace:
+            at: ~/
+        - run:
+            name: Install dependencies  
+            command: |
+              apk add curl
+              apk add --upgrade bash
+              apk add --update ansible
+              apk add openssh-client
+              pip3 install awscli
+        - run:
+            name: Configure server
+            command: |
+              cat ~/project/.circleci/ansible/inventory.txt
+              export ANSIBLE_HOST_KEY_CHECKING=False
+              ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/main.yml
+              
+        - destroy_environment        
 
 
 workflows:
@@ -170,6 +194,14 @@ workflows:
               only:
                 - dev
        - create-ec2-instance:
+          filters:
+            branches:
+              only:
+                - main
+
+       - configure_infrastructure:
+          requires:
+            - create-ec2-instance
           filters:
             branches:
               only:
